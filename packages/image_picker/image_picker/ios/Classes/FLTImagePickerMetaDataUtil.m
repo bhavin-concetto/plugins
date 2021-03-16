@@ -61,6 +61,16 @@ const FLTImagePickerMIMEType kFLTImagePickerMIMETypeDefault = FLTImagePickerMIME
   return mutableData;
 }
 
+BOOL SupportsHEIC() {
+  NSArray<NSString *> *types = CFBridgingRelease(
+      CGImageDestinationCopyTypeIdentifiers());
+    if (@available(iOS 11.0, *)) {
+        return [types containsObject: @"public.heic"];
+    } else {
+        return false;
+    }
+}
+
 + (NSData *)convertImage:(UIImage *)image
                usingType:(FLTImagePickerMIMEType)type
                  quality:(nullable NSNumber *)quality {
@@ -69,11 +79,18 @@ const FLTImagePickerMIMEType kFLTImagePickerMIMETypeDefault = FLTImagePickerMIME
           @"original quality",
           [FLTImagePickerMetaDataUtil imageTypeSuffixFromType:type]);
   }
-
+    
+    bool isHeicSupported =SupportsHEIC();
+    
+    NSLog(@"isHeicSupported %d", isHeicSupported);
+    
   switch (type) {
     case FLTImagePickerMIMETypeJPEG: {
       CGFloat qualityFloat = (quality != nil) ? quality.floatValue : 1;
-      return UIImageJPEGRepresentation(image, qualityFloat);
+        if(isHeicSupported)
+        { return UIImageJPEGRepresentation(image, qualityFloat);}else{
+            return UIImagePNGRepresentation(image);
+        }
     }
     case FLTImagePickerMIMETypePNG:
       return UIImagePNGRepresentation(image);
