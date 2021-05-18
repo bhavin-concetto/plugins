@@ -5,7 +5,7 @@
 #import "GoogleMapController.h"
 #import "FLTGoogleMapTileOverlayController.h"
 #import "JsonConversions.h"
-
+@import GoogleMapsUtils;
 #pragma mark - Conversion of JSON-like values sent via platform channels. Forward declarations.
 
 static NSDictionary* PositionToJson(GMSCameraPosition* position);
@@ -371,7 +371,17 @@ static double ToDouble(NSNumber* data) { return [FLTGoogleMapJsonConversions toD
   } else if ([call.method isEqualToString:@"map#getTileOverlayInfo"]) {
     NSString* rawTileOverlayId = call.arguments[@"tileOverlayId"];
     result([_tileOverlaysController getTileOverlayInfo:rawTileOverlayId]);
-  } else {
+  } else if ([call.method isEqualToString:@"map#addKML"]){
+      NSString* path = [[NSBundle mainBundle] pathForResource:@"mol" ofType:@"kml"];
+      NSURL * anUrl =[NSURL fileURLWithPath:path];
+      GMUKMLParser *parser = [[GMUKMLParser alloc] initWithURL:anUrl];
+      [parser parse];
+      GMUGeometryRenderer *renderer = [[GMUGeometryRenderer alloc] initWithMap:_mapView
+                                                                    geometries:parser.placemarks
+                                                                        styles:parser.styles];
+      [renderer render];
+  }
+  else {
     result(FlutterMethodNotImplemented);
   }
 }
