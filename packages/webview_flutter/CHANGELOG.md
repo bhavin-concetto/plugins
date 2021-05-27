@@ -1,3 +1,11 @@
+## 2.0.8
+
+* Migrate maven repository from jcenter to mavenCentral.
+
+## 2.0.7
+
+* Republished 2.0.6 with Flutter 2.2 to avoid https://github.com/dart-lang/pub/issues/3001
+
 ## 2.0.6
 
 * WebView requires at least Android 19 if you are using
