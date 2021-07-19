@@ -1,3 +1,8 @@
+## NEXT
+
+* Add iOS unit and UI integration test targets.
+* Exclude arm64 simulators in example app.
+
 ## 5.0.4
 
 * Migrate maven repo from jcenter to mavenCentral.
